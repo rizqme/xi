@@ -531,12 +531,12 @@ xi.Xi.prototype = {
 		
 		var uri = root + '/' + path.join('/') + '.js';
 		
-		if(vars.modules[uri])
+		if(vars.scripts[uri])
 			return xi.debug.error("[xi] The module "  + string + " isn't provided by: " + uri);
 		if(vars.scripts[uri] == 'failed')
 			return xi.debug.error("[xi] Can't find module: " + string);
 		
-		xi.load(uri);
+		xi.load(vars.paths[string] || uri);
 
 		throw {retry: string};
 	},
@@ -545,9 +545,8 @@ xi.Xi.prototype = {
 		
 		var path = string.split('.');
 		var name = path.pop();
-		var pathResolve = vars.paths[path.join('.')];
 		
-		this.require(pathResolve || path.join('.') + (name == '*' ? '' : '.'+name));
+		this.require(path.join('.') + (name == '*' ? '' : '.'+name));
 		
 		var module = xi.module(path.join('.'));
 		if(!module) return xi.debug.error("[xi] Module doesn't exist: " + path.join('.'));
